@@ -4,17 +4,18 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/montybeatnik/tutorials/repository-pattern"
+	repositorytut "github.com/montybeatnik/tutorials/repository-pattern"
+	"github.com/montybeatnik/tutorials/repository-pattern/store"
 )
 
 func main() {
 	port := ":9080"
-	repo := repository.NewInMemRepo()
-	svc := repository.NewService(repo)
+	repo := store.NewInMemRepo()
+	svc := repositorytut.NewService(repo)
 	// newDevice := repository.Device{Hostname: "test3", IP: "3.3.3.3"}
 	// svc.StoreDevice(newDevice)
 	// dev, err := svc.GetDeviceByIP("3.3.3.3")
-	svr := repository.NewServer(svc)
+	svr := repositorytut.NewServer(svc)
 	if err := http.ListenAndServe(port, svr.NewMux()); err != nil {
 		log.Println(err)
 	}

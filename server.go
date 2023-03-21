@@ -1,4 +1,4 @@
-package repository
+package repositorytut
 
 import (
 	"encoding/json"

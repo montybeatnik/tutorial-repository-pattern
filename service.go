@@ -1,6 +1,9 @@
-package repository
+package repositorytut
 
-import "github.com/montybeatnik/tutorials/repository-pattern/models"
+import (
+	"github.com/montybeatnik/tutorials/repository-pattern/models"
+	"github.com/montybeatnik/tutorials/repository-pattern/store"
+)
 
 type Service interface {
 	StoreDevice(device models.Device) error
@@ -8,10 +11,10 @@ type Service interface {
 }
 
 type service struct {
-	repo Repository
+	repo store.Repository
 }
 
-func NewService(repo Repository) *service {
+func NewService(repo store.Repository) *service {
 	return &service{repo: repo}
 }
 
