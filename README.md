@@ -10,3 +10,8 @@ curl -X POST localhost:9080/new-device \
 curl -X GET localhost:9080/device?ip=7.7.7.7
 curl -X GET localhost:9080/device
 ```
+
+## postgres 
+```bash
+go get github.com/lib/pq
+```

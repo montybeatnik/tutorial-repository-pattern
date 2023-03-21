@@ -5,6 +5,8 @@ import (
 	"log"
 	"net/http"
 	"strings"
+
+	"github.com/montybeatnik/tutorials/repository-pattern/models"
 )
 
 type server struct {
@@ -23,7 +25,7 @@ func (s *server) newDevice(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		return
 	}
-	var device Device
+	var device models.Device
 	defer r.Body.Close()
 	if err := json.NewDecoder(r.Body).Decode(&device); err != nil {
 		log.Println("decoding failed", err)
