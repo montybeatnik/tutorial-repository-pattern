@@ -1,7 +1,7 @@
 package store
 
 import (
-	"log"
+	"errors"
 
 	"github.com/montybeatnik/tutorials/repository-pattern/devices/models"
 )
@@ -14,15 +14,13 @@ var count = 0
 
 func NewInMemRepo() *InMemRepo {
 	store := make(map[int]models.Device)
-	count++
-	store[count] = models.Device{Hostname: "hostname1", IP: "1.1.1.1"}
 	return &InMemRepo{store: store}
 }
 
 func (mr *InMemRepo) NewDevice(device models.Device) error {
 	count++
+	device.ID = count
 	mr.store[count] = device
-	log.Println(mr.store)
 	return nil
 }
 
@@ -32,6 +30,9 @@ func (mr *InMemRepo) GetDeviceByIP(ip string) (models.Device, error) {
 		if dev.IP == ip {
 			match = pk
 		}
+	}
+	if match == 0 {
+		return models.Device{}, errors.New("device not found")
 	}
 	return mr.store[match], nil
 }

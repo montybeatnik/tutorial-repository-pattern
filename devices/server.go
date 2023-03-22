@@ -2,8 +2,10 @@ package devices
 
 import (
 	"encoding/json"
+	"expvar"
 	"log"
 	"net/http"
+	"net/http/pprof"
 	"strings"
 
 	"github.com/montybeatnik/tutorials/repository-pattern/devices/models"
@@ -47,6 +49,13 @@ func (s *server) device(w http.ResponseWriter, r *http.Request) {
 	dev, err := s.deviceService.GetDeviceByIP(ip)
 	if err != nil {
 		log.Println(err)
+		resp := struct {
+			Message string `json:"message"`
+		}{
+			Message: err.Error(),
+		}
+		json.NewEncoder(w).Encode(&resp)
+		return
 	}
 	json.NewEncoder(w).Encode(&dev)
 }
@@ -63,4 +72,21 @@ func NewServer(svc Service) *server {
 		deviceService: svc,
 		router:        mux,
 	}
+}
+
+// StandardLibraryMux registers all the debug routes from the standard library
+// into a new mux bypassing the use of the DefaultServerMux. Using the
+// DefaultServerMux would be a security risk since a dependency could inject a
+// handler into our service without us knowing it.
+func DebugStandardLibraryMux() *http.ServeMux {
+	mux := http.NewServeMux()
+
+	mux.HandleFunc("/debug/pprof/", pprof.Index)
+	mux.HandleFunc("/debug/pprof/cmdline", pprof.Cmdline)
+	mux.HandleFunc("/debug/pprof/profile", pprof.Profile)
+	mux.HandleFunc("/debug/pprof/symbol", pprof.Symbol)
+	mux.HandleFunc("/debug/pprof/trace", pprof.Trace)
+	mux.Handle("/debug/vars", expvar.Handler())
+
+	return mux
 }

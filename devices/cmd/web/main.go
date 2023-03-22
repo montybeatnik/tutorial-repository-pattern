@@ -9,6 +9,15 @@ import (
 )
 
 func main() {
+
+	deubgMux := devices.DebugStandardLibraryMux()
+
+	go func() {
+		if err := http.ListenAndServe(":4001", deubgMux); err != nil {
+			log.Println(err)
+		}
+	}()
+
 	port := ":9080"
 	repo := store.NewInMemRepo()
 	svc := devices.NewService(repo)
