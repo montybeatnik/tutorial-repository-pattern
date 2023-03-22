@@ -6,7 +6,7 @@ import (
 )
 
 type Service interface {
-	StoreDevice(device models.Device) error
+	NewDevice(device models.Device) error
 	GetDeviceByIP(ip string) (models.Device, error)
 }
 
@@ -18,7 +18,7 @@ func NewService(repo store.Repository) *service {
 	return &service{repo: repo}
 }
 
-func (s *service) StoreDevice(device models.Device) error {
+func (s *service) NewDevice(device models.Device) error {
 	return s.repo.NewDevice(device)
 }
 

@@ -34,11 +34,10 @@ func (pr *PGRepo) NewDevice(device models.Device) error {
 	query := `INSERT INTO devices (hostname, ip) VALUES ($1, $2);`
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
 	defer cancel()
-	res, err := pr.db.ExecContext(ctx, query, device.Hostname, device.IP)
+	_, err := pr.db.ExecContext(ctx, query, device.Hostname, device.IP)
 	if err != nil {
 		return err
 	}
-	_ = res
 	return nil
 }
 

@@ -14,7 +14,7 @@ type InMemRepo struct {
 
 // Starting the PK count at zero using the nil value
 // of an int.
-var count = 0
+var count int
 
 // NewInMemRepo is a factory function that stands up
 // our in-memory device store.

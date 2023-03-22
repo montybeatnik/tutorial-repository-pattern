@@ -33,7 +33,7 @@ func (s *server) handleNewDevice(w http.ResponseWriter, r *http.Request) {
 		log.Println("decoding failed", err)
 	}
 	log.Println("creating a device", device)
-	if err := s.deviceService.StoreDevice(device); err != nil {
+	if err := s.deviceService.NewDevice(device); err != nil {
 		log.Println(err)
 	}
 }

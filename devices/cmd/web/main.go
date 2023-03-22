@@ -23,11 +23,16 @@ func main() {
 		}
 	}()
 
+	// grab the port from the CLI or use 9080 by defaul
 	port := flag.String("port", "9080", "port on which to listen for incoming requests")
 	flag.Parse()
+	// stand up the repo
 	repo := store.NewInMemRepo()
+	// wire the repo into the service
 	svc := devices.NewService(repo)
+	// build a server
 	svr := devices.NewServer(svc)
+	// fire up the server
 	log.Printf("firing up server on %v", *port)
 	if err := http.ListenAndServe(fmt.Sprintf(":%v", *port), svr.NewMux()); err != nil {
 		log.Println(err)

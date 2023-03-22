@@ -23,7 +23,7 @@ func main() {
 	// Put together a device to "toss it on the shelf" of our PG device store.
 	newDevice := models.Device{Hostname: "test3", IP: "3.3.3.3"}
 	// Insert the device into the store.
-	if err := svc.StoreDevice(newDevice); err != nil {
+	if err := svc.NewDevice(newDevice); err != nil {
 		log.Println(err)
 	}
 	// Grab it from the "shelf" of our PG store.

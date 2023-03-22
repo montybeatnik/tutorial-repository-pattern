@@ -10,7 +10,8 @@ There is a cmd/exp/main.go file for testing out ideas and interacting with the s
 go run cmd/exp/main.go
 ```
 
-#### Sample code for the exp dir. 
+#### Sample code for the exp dir.
+##### InMem example 
 ```go
 func main() {
 	// Create the in-mem devices store using the repo.
@@ -20,7 +21,7 @@ func main() {
 	// Put together a device.
 	newDevice := models.Device{Hostname: "test3", IP: "3.3.3.3"}
 	// Feed that device into the service.
-	if err := svc.StoreDevice(newDevice); err != nil {
+	if err := svc.NewDevice(newDevice); err != nil {
 		log.Println(err)
 	}
 	// Retrieve that device from the service.
@@ -33,10 +34,7 @@ func main() {
 }
 ```
 
-### Web 
-If you're into firing up a full on web server and hitting the API with JSON or to get JSON, use cmd/web/main.go. 
-
-#### Sample code for the web dir. 
+##### PG example 
 ```go
 func main() {
 	// Grab our DSN from env.
@@ -52,7 +50,7 @@ func main() {
 	// Put together a device to "toss it on the shelf" of our PG device store.
 	newDevice := models.Device{Hostname: "test3", IP: "3.3.3.3"}
 	// Insert the device into the store.
-	if err := svc.StoreDevice(newDevice); err != nil {
+	if err := svc.NewDevice(newDevice); err != nil {
 		log.Println(err)
 	}
 	// Grab it from the "shelf" of our PG store.
@@ -62,6 +60,41 @@ func main() {
 	}
 	// Relish in the glory of your effort.
 	log.Printf("%+v\n", dev)
+}
+```
+
+### Web 
+If you're into firing up a full on web server and hitting the API with JSON or to get JSON, use cmd/web/main.go. 
+
+#### Sample code for the web dir. 
+```go
+package main
+
+import (
+	"flag"
+	"fmt"
+	"log"
+	"net/http"
+
+	"github.com/montybeatnik/tutorials/repository-pattern/devices"
+	"github.com/montybeatnik/tutorials/repository-pattern/devices/store"
+)
+
+func main() {
+	// grab the port from the CLI or use 9080 by defaul
+	port := flag.String("port", "9080", "port on which to listen for incoming requests")
+	flag.Parse()
+	// stand up the repo
+	repo := store.NewInMemRepo()
+	// wire the repo into the service
+	svc := devices.NewService(repo)
+	// build a server
+	svr := devices.NewServer(svc)
+	// fire up the server
+	log.Printf("firing up server on %v", *port)
+	if err := http.ListenAndServe(fmt.Sprintf(":%v", *port), svr.NewMux()); err != nil {
+		log.Println(err)
+	}
 }
 ```
 
