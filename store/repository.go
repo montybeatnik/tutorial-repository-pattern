@@ -5,6 +5,6 @@ import (
 )
 
 type Repository interface {
-	StoreDevice(device models.Device) error
+	NewDevice(device models.Device) error
 	GetDeviceByIP(ip string) (models.Device, error)
 }

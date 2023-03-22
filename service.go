@@ -19,7 +19,7 @@ func NewService(repo store.Repository) *service {
 }
 
 func (s *service) StoreDevice(device models.Device) error {
-	return s.repo.StoreDevice(device)
+	return s.repo.NewDevice(device)
 }
 
 func (s *service) GetDeviceByIP(ip string) (models.Device, error) {

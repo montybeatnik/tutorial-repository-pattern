@@ -18,7 +18,7 @@ func NewInMemRepo() *InMemRepo {
 	return &InMemRepo{store: store}
 }
 
-func (mr *InMemRepo) StoreDevice(device models.Device) error {
+func (mr *InMemRepo) NewDevice(device models.Device) error {
 	count++
 	mr.store[count] = device
 	log.Println(mr.store)

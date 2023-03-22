@@ -27,7 +27,7 @@ func (pr *PGRepo) Ping() error {
 	return pr.db.Ping()
 }
 
-func (pr *PGRepo) StoreDevice(device models.Device) error {
+func (pr *PGRepo) NewDevice(device models.Device) error {
 	query := `INSERT INTO devices (hostname, ip) VALUES ($1, $2);`
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
 	defer cancel()
