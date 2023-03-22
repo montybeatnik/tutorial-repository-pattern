@@ -22,6 +22,9 @@ db-all-up: db-up db-sleep db-create-inventory db-create-table
 db-shell:
 	docker exec -it device_inventory psql -U postgres -d device_inventory
 
+db-clear:
+	docker exec device_inventory psql -U postgres -d device_inventory -c "DELETE FROM devices;" 
+
 db-down:
 	docker container rm -f device_inventory
 	docker volume rm device_inventory

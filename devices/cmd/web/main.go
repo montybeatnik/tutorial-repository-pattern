@@ -1,6 +1,8 @@
 package main
 
 import (
+	"flag"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -10,22 +12,24 @@ import (
 
 func main() {
 
+	// =========================================================================
+	// Stand up a debug muxer for observability.
 	deubgMux := devices.DebugStandardLibraryMux()
 
+	// Fire up a web server in the background, exposing the debug methods.
 	go func() {
 		if err := http.ListenAndServe(":4001", deubgMux); err != nil {
 			log.Println(err)
 		}
 	}()
 
-	port := ":9080"
+	port := flag.String("port", "9080", "port on which to listen for incoming requests")
+	flag.Parse()
 	repo := store.NewInMemRepo()
 	svc := devices.NewService(repo)
-	// newDevice := repository.Device{Hostname: "test3", IP: "3.3.3.3"}
-	// svc.StoreDevice(newDevice)
-	// dev, err := svc.GetDeviceByIP("3.3.3.3")
 	svr := devices.NewServer(svc)
-	if err := http.ListenAndServe(port, svr.NewMux()); err != nil {
+	log.Printf("firing up server on %v", *port)
+	if err := http.ListenAndServe(fmt.Sprintf(":%v", *port), svr.NewMux()); err != nil {
 		log.Println(err)
 	}
 }

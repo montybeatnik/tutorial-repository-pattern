@@ -3,7 +3,7 @@ package store
 import (
 	"context"
 	"database/sql"
-	"log"
+	"fmt"
 	"time"
 
 	"github.com/montybeatnik/tutorials/repository-pattern/devices/models"
@@ -15,18 +15,21 @@ type PGRepo struct {
 	db *sql.DB
 }
 
-func NewPGRepo(dsn string) *PGRepo {
+// NewPGRepo is a factory function that connects
+// to a postgres RDBMS and drops into a device database
+// using a DSN.
+func NewPGRepo(dsn string) (*PGRepo, error) {
 	db, err := sql.Open("postgres", dsn)
 	if err != nil {
-		log.Println(err)
+		return nil, fmt.Errorf("couldn't connect to RDMBs: %w", err)
 	}
-	return &PGRepo{db: db}
+	if err := db.Ping(); err != nil {
+		return nil, fmt.Errorf("couldn't connect to DB: %w", err)
+	}
+	return &PGRepo{db: db}, nil
 }
 
-func (pr *PGRepo) Ping() error {
-	return pr.db.Ping()
-}
-
+// NewDevice adds a device to DB.
 func (pr *PGRepo) NewDevice(device models.Device) error {
 	query := `INSERT INTO devices (hostname, ip) VALUES ($1, $2);`
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
@@ -39,6 +42,7 @@ func (pr *PGRepo) NewDevice(device models.Device) error {
 	return nil
 }
 
+// GetDeviceByIP queries the DB for the given IP.
 func (pr *PGRepo) GetDeviceByIP(ip string) (models.Device, error) {
 	query := `SELECT id, hostname, ip FROM devices WHERE ip = $1`
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)

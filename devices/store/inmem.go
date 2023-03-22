@@ -6,17 +6,24 @@ import (
 	"github.com/montybeatnik/tutorials/repository-pattern/devices/models"
 )
 
+// InMemRepo stores devices in a map for quick retrieval
+// allowing for model changes with minimal effort.
 type InMemRepo struct {
 	store map[int]models.Device
 }
 
+// Starting the PK count at zero using the nil value
+// of an int.
 var count = 0
 
+// NewInMemRepo is a factory function that stands up
+// our in-memory device store.
 func NewInMemRepo() *InMemRepo {
 	store := make(map[int]models.Device)
 	return &InMemRepo{store: store}
 }
 
+// NewDevice adds a device to the map.
 func (mr *InMemRepo) NewDevice(device models.Device) error {
 	count++
 	device.ID = count
@@ -24,6 +31,8 @@ func (mr *InMemRepo) NewDevice(device models.Device) error {
 	return nil
 }
 
+// GetDeviceByIP walks the map looking for an occurence
+// of the given IP.
 func (mr *InMemRepo) GetDeviceByIP(ip string) (models.Device, error) {
 	var match int
 	for pk, dev := range mr.store {

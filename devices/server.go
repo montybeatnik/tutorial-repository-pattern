@@ -17,13 +17,13 @@ type server struct {
 }
 
 func (s *server) NewMux() http.Handler {
-	s.router.HandleFunc("/new-device", s.newDevice)
-	s.router.HandleFunc("/device/", s.device)
-	s.router.HandleFunc("/ping", s.ping)
+	s.router.HandleFunc("/new-device", s.handleNewDevice)
+	s.router.HandleFunc("/device/", s.handleDeviceByIP)
+	s.router.HandleFunc("/ping", s.handlePing)
 	return s.router
 }
 
-func (s *server) newDevice(w http.ResponseWriter, r *http.Request) {
+func (s *server) handleNewDevice(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		return
 	}
@@ -38,7 +38,7 @@ func (s *server) newDevice(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (s *server) device(w http.ResponseWriter, r *http.Request) {
+func (s *server) handleDeviceByIP(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		return
 	}
@@ -60,7 +60,7 @@ func (s *server) device(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(&dev)
 }
 
-func (s *server) ping(w http.ResponseWriter, r *http.Request) {
+func (s *server) handlePing(w http.ResponseWriter, r *http.Request) {
 	pong := map[string]string{"msg": "pong"}
 	json.NewEncoder(w).Encode(pong)
 	return
