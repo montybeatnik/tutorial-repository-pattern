@@ -72,8 +72,9 @@ curl -X POST localhost:9080/new-device \
     -H 'Content-Type: application/json' \
     -d '{"hostname": "curl_test", "ip": "7.7.7.42"}'
 # get a device by ip
-curl -X GET localhost:9080/device?ip=7.7.7.7
-curl -X GET localhost:9080/device
+curl -X GET localhost:9080/device/7.7.7.42
+# if you're into metrics
+curl -X GET localhost:4000/debug/vars
 ```
 
 ## Dependencies
@@ -89,3 +90,6 @@ go get github.com/lib/pq
 ```bash
 export DSN="postgres://postgres:password@localhost:5432/device_inventory?sslmode=disable"
 ```
+
+## Testing
+Sadly, there are no tests. 
