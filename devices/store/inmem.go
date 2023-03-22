@@ -14,6 +14,7 @@ var count = 0
 
 func NewInMemRepo() *InMemRepo {
 	store := make(map[int]models.Device)
+	count++
 	store[count] = models.Device{Hostname: "hostname1", IP: "1.1.1.1"}
 	return &InMemRepo{store: store}
 }
