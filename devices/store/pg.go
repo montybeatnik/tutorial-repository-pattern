@@ -6,7 +6,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/montybeatnik/tutorials/repository-pattern/models"
+	"github.com/montybeatnik/tutorials/repository-pattern/devices/models"
 
 	_ "github.com/lib/pq"
 )

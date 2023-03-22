@@ -3,7 +3,7 @@ package store
 import (
 	"log"
 
-	"github.com/montybeatnik/tutorials/repository-pattern/models"
+	"github.com/montybeatnik/tutorials/repository-pattern/devices/models"
 )
 
 type InMemRepo struct {

@@ -1,4 +1,4 @@
-package repositorytut
+package devices
 
 import (
 	"encoding/json"
@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/montybeatnik/tutorials/repository-pattern/models"
+	"github.com/montybeatnik/tutorials/repository-pattern/devices/models"
 )
 
 type server struct {

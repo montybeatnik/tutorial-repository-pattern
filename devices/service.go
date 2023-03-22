@@ -1,8 +1,8 @@
-package repositorytut
+package devices
 
 import (
-	"github.com/montybeatnik/tutorials/repository-pattern/models"
-	"github.com/montybeatnik/tutorials/repository-pattern/store"
+	"github.com/montybeatnik/tutorials/repository-pattern/devices/models"
+	"github.com/montybeatnik/tutorials/repository-pattern/devices/store"
 )
 
 type Service interface {
