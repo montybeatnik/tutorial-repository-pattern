@@ -103,7 +103,7 @@ func main() {
 # create a device
 curl -X POST localhost:9080/new-device \
     -H 'Content-Type: application/json' \
-    -d '{"hostname": "curl_test", "ip": "7.7.7.42"}'
+    -d '{"hostname": "curl_test", "ip": "7.7.7.42", "clli": "someclli"}'
 # get a device by ip
 curl -X GET localhost:9080/device/7.7.7.42
 # if you're into metrics

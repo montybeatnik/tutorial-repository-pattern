@@ -6,6 +6,6 @@ import (
 
 // Repository outlines the methods to interact with the device store.
 type Repository interface {
-	NewDevice(device models.Device) error
+	NewDevice(newDevice models.NewDeviceRequest) (models.Device, error)
 	GetDeviceByIP(ip string) (models.Device, error)
 }

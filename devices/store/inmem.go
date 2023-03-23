@@ -24,11 +24,12 @@ func NewInMemRepo() *InMemRepo {
 }
 
 // NewDevice adds a device to the map.
-func (mr *InMemRepo) NewDevice(device models.Device) error {
+func (mr *InMemRepo) NewDevice(newDevice models.NewDeviceRequest) (models.Device, error) {
 	count++
+	device := mapDeviceAttrs(newDevice)
 	device.ID = count
 	mr.store[count] = device
-	return nil
+	return device, nil
 }
 
 // GetDeviceByIP walks the map looking for an occurence

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 
@@ -21,17 +20,18 @@ func main() {
 	// Wire up the repo to the service.
 	svc := devices.NewService(repo)
 	// Put together a device.
-	newDevice := models.Device{
+	newDevice := models.NewDeviceRequest{
 		Hostname: "test3",
 		IP:       "3.3.3.3",
 		CLLI:     "someclli",
 	}
 	// Feed that device into the service.
-	if err := svc.NewDevice(newDevice); err != nil {
+	device, err := svc.NewDevice(newDevice)
+	if err != nil {
 		log.Println(err)
 		os.Exit(1)
 	}
-	fmt.Println("blah")
+	log.Println("created device with ID:", device.ID)
 	// Retrieve that device from the service.
 	dev, err := svc.GetDeviceByIP(newDevice.IP)
 	if err != nil {

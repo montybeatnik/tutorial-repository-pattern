@@ -1,21 +1,19 @@
 package devices
 
 import (
-	"encoding/json"
 	"expvar"
-	"log"
 	"net/http"
 	"net/http/pprof"
-	"strings"
-
-	"github.com/montybeatnik/tutorials/repository-pattern/devices/models"
 )
 
+// server defines the dependency the server needs.
 type server struct {
 	deviceService Service
 	router        *http.ServeMux
 }
 
+// NewMux defines the routes exposed via the endpoint, mapping
+// the routes to handlers.
 func (s *server) NewMux() http.Handler {
 	s.router.HandleFunc("/new-device", s.handleNewDevice)
 	s.router.HandleFunc("/device/", s.handleDeviceByIP)
@@ -23,49 +21,8 @@ func (s *server) NewMux() http.Handler {
 	return s.router
 }
 
-func (s *server) handleNewDevice(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		return
-	}
-	var device models.Device
-	defer r.Body.Close()
-	if err := json.NewDecoder(r.Body).Decode(&device); err != nil {
-		log.Println("decoding failed", err)
-	}
-	log.Println("creating a device", device)
-	if err := s.deviceService.NewDevice(device); err != nil {
-		log.Println(err)
-	}
-}
-
-func (s *server) handleDeviceByIP(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
-		return
-	}
-	var ip string
-	if len(strings.Split(r.URL.Path, "/")) > 1 {
-		ip = strings.Split(r.URL.Path, "/")[2]
-	}
-	dev, err := s.deviceService.GetDeviceByIP(ip)
-	if err != nil {
-		log.Println(err)
-		resp := struct {
-			Message string `json:"message"`
-		}{
-			Message: err.Error(),
-		}
-		json.NewEncoder(w).Encode(&resp)
-		return
-	}
-	json.NewEncoder(w).Encode(&dev)
-}
-
-func (s *server) handlePing(w http.ResponseWriter, r *http.Request) {
-	pong := map[string]string{"msg": "pong"}
-	json.NewEncoder(w).Encode(pong)
-	return
-}
-
+// NewServer is a factory function that injects the router
+// and the service to the server.
 func NewServer(svc Service) *server {
 	mux := http.NewServeMux()
 	return &server{

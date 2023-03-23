@@ -11,6 +11,8 @@ import (
 	_ "github.com/lib/pq"
 )
 
+// PGRepo represntes a postgres data store. It has a db, which is a
+// handle representing a pool of zero or more underlying connections.
 type PGRepo struct {
 	db *sql.DB
 }
@@ -30,15 +32,16 @@ func NewPGRepo(dsn string) (*PGRepo, error) {
 }
 
 // NewDevice adds a device to DB.
-func (pr *PGRepo) NewDevice(device models.Device) error {
-	query := `INSERT INTO devices (hostname, ip, clli) VALUES ($1, $2, $3);`
+func (pr *PGRepo) NewDevice(newDevice models.NewDeviceRequest) (models.Device, error) {
+	query := `INSERT INTO devices (hostname, ip, clli) VALUES ($1, $2, $3)
+	RETURNING id;`
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
 	defer cancel()
-	_, err := pr.db.ExecContext(ctx, query, device.Hostname, device.IP, device.CLLI)
-	if err != nil {
-		return err
+	device := mapDeviceAttrs(newDevice)
+	if err := pr.db.QueryRowContext(ctx, query, device.Hostname, device.IP, device.CLLI).Scan(&device.ID); err != nil {
+		return device, err
 	}
-	return nil
+	return device, nil
 }
 
 // GetDeviceByIP queries the DB for the given IP.
