@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	// Create the in-mem devices store using the repo.
+	// Create the pg devices store using the repo.
 	dsn := os.Getenv("DSN")
 	repo, err := store.NewPGRepo(dsn)
 	if err != nil {
@@ -20,20 +20,16 @@ func main() {
 	// Wire up the repo to the service.
 	svc := devices.NewService(repo)
 	// Put together a device.
-	newDevice := models.NewDeviceRequest{
-		Hostname: "test3",
-		IP:       "3.3.3.3",
-		CLLI:     "someclli",
-	}
+	newDevice := models.NewDeviceRequest{Hostname: "test3", IP: "3.3.3.3", CLLI: "someclli"}
 	// Feed that device into the service.
-	device, err := svc.NewDevice(newDevice)
+	dev, err := svc.NewDevice(newDevice)
 	if err != nil {
 		log.Println(err)
 		os.Exit(1)
 	}
-	log.Println("created device with ID:", device.ID)
+	log.Println("created device successfully, the PK is", dev.ID)
 	// Retrieve that device from the service.
-	dev, err := svc.GetDeviceByIP(newDevice.IP)
+	dev, err = svc.GetDeviceByIP("3.3.3.3")
 	if err != nil {
 		log.Println(err)
 	}

@@ -19,13 +19,15 @@ func main() {
 	// Wire up the repo to the service.
 	svc := devices.NewService(repo)
 	// Put together a device.
-	newDevice := models.Device{Hostname: "test3", IP: "3.3.3.3"}
+	newDevice := models.NewDeviceRequest{Hostname: "test3", IP: "3.3.3.3", CLLI: "someclli"}
 	// Feed that device into the service.
-	if err := svc.NewDevice(newDevice); err != nil {
+	dev, err := svc.NewDevice(newDevice)
+	if err != nil {
 		log.Println(err)
 	}
+	log.Println("created device successfully, the PK is", dev.ID)
 	// Retrieve that device from the service.
-	dev, err := svc.GetDeviceByIP("3.3.3.3")
+	dev, err = svc.GetDeviceByIP("3.3.3.3")
 	if err != nil {
 		log.Println(err)
 	}
