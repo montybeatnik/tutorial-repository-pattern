@@ -31,10 +31,10 @@ func NewPGRepo(dsn string) (*PGRepo, error) {
 
 // NewDevice adds a device to DB.
 func (pr *PGRepo) NewDevice(device models.Device) error {
-	query := `INSERT INTO devices (hostname, ip) VALUES ($1, $2);`
+	query := `INSERT INTO devices (hostname, ip, clli) VALUES ($1, $2, $3);`
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
 	defer cancel()
-	_, err := pr.db.ExecContext(ctx, query, device.Hostname, device.IP)
+	_, err := pr.db.ExecContext(ctx, query, device.Hostname, device.IP, device.CLLI)
 	if err != nil {
 		return err
 	}
@@ -43,11 +43,15 @@ func (pr *PGRepo) NewDevice(device models.Device) error {
 
 // GetDeviceByIP queries the DB for the given IP.
 func (pr *PGRepo) GetDeviceByIP(ip string) (models.Device, error) {
-	query := `SELECT id, hostname, ip FROM devices WHERE ip = $1`
+	query := `SELECT id, hostname, ip, clli FROM devices WHERE ip = $1`
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
 	defer cancel()
 	var dev models.Device
-	if err := pr.db.QueryRowContext(ctx, query, ip).Scan(&dev.ID, &dev.Hostname, &dev.IP); err != nil {
+	if err := pr.db.QueryRowContext(ctx, query, ip).Scan(
+		&dev.ID,
+		&dev.Hostname,
+		&dev.IP,
+		&dev.CLLI); err != nil {
 		return dev, err
 	}
 	return dev, nil

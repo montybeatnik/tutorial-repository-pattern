@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -10,27 +11,32 @@ import (
 )
 
 func main() {
-	// Grab our DSN from env.
-	DSN := os.Getenv("DSN")
-	// Prepare our PG device Store.
-	repo, err := store.NewPGRepo(DSN)
+	// Create the in-mem devices store using the repo.
+	dsn := os.Getenv("DSN")
+	repo, err := store.NewPGRepo(dsn)
 	if err != nil {
 		log.Println(err)
 		os.Exit(1)
 	}
-	// Wire up the PG store to our service.
+	// Wire up the repo to the service.
 	svc := devices.NewService(repo)
-	// Put together a device to "toss it on the shelf" of our PG device store.
-	newDevice := models.Device{Hostname: "test3", IP: "3.3.3.3"}
-	// Insert the device into the store.
+	// Put together a device.
+	newDevice := models.Device{
+		Hostname: "test3",
+		IP:       "3.3.3.3",
+		CLLI:     "someclli",
+	}
+	// Feed that device into the service.
 	if err := svc.NewDevice(newDevice); err != nil {
 		log.Println(err)
+		os.Exit(1)
 	}
-	// Grab it from the "shelf" of our PG store.
-	dev, err := svc.GetDeviceByIP("3.3.3.3")
+	fmt.Println("blah")
+	// Retrieve that device from the service.
+	dev, err := svc.GetDeviceByIP(newDevice.IP)
 	if err != nil {
 		log.Println(err)
 	}
-	// Relish in the glory of your effort.
+	// Look at your handy work.
 	log.Printf("%+v\n", dev)
 }

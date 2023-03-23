@@ -15,7 +15,7 @@ db-create-inventory:
 	docker exec device_inventory psql -U postgres -c "create database device_inventory"
 
 db-create-table:
-	docker exec device_inventory psql -U postgres -d device_inventory -c "CREATE TABLE IF NOT EXISTS devices(id SERIAL PRIMARY KEY, hostname TEXT UNIQUE, ip INET);"
+	docker exec device_inventory psql -U postgres -d device_inventory -c "CREATE TABLE IF NOT EXISTS devices(id SERIAL PRIMARY KEY, hostname TEXT UNIQUE, ip INET, clli TEXT UNIQUE);"
 
 db-all-up: db-up db-sleep db-create-inventory db-create-table
 
