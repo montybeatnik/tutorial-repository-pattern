@@ -2,7 +2,6 @@ package main
 
 import (
 	"log"
-	"os"
 
 	"github.com/montybeatnik/tutorials/repository-pattern/devices"
 	"github.com/montybeatnik/tutorials/repository-pattern/devices/models"
@@ -10,13 +9,8 @@ import (
 )
 
 func main() {
-	// Create the pg devices store using the repo.
-	dsn := os.Getenv("DSN")
-	repo, err := store.NewPGRepo(dsn)
-	if err != nil {
-		log.Println(err)
-		os.Exit(1)
-	}
+	// Create the in-mem devices store using the repo.
+	repo := store.NewInMemRepo()
 	// Wire up the repo to the service.
 	svc := devices.NewService(repo)
 	// Put together a device.
@@ -25,7 +19,6 @@ func main() {
 	dev, err := svc.NewDevice(newDevice)
 	if err != nil {
 		log.Println(err)
-		os.Exit(1)
 	}
 	log.Println("created device successfully, the PK is", dev.ID)
 	// Retrieve that device from the service.
