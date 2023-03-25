@@ -1,14 +1,16 @@
-package devices
+package main
 
 import (
 	"expvar"
 	"net/http"
 	"net/http/pprof"
+
+	"github.com/montybeatnik/tutorials/repository-pattern/devices"
 )
 
 // server defines the dependency the server needs.
 type server struct {
-	deviceService Service
+	deviceService devices.Service
 	router        *http.ServeMux
 }
 
@@ -23,7 +25,7 @@ func (s *server) NewMux() http.Handler {
 
 // NewServer is a factory function that injects the router
 // and the service to the server.
-func NewServer(svc Service) *server {
+func NewServer(svc devices.Service) *server {
 	mux := http.NewServeMux()
 	return &server{
 		deviceService: svc,

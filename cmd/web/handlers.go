@@ -1,4 +1,4 @@
-package devices
+package main
 
 import (
 	"context"
@@ -86,6 +86,7 @@ func (s *server) handleDeviceByIP(w http.ResponseWriter, r *http.Request) {
 	if len(strings.Split(r.URL.Path, "/")) > 1 {
 		ip = strings.Split(r.URL.Path, "/")[2]
 	}
+	log.Println("attempting to grab", ip, "from the db...")
 	dev, err := s.deviceService.GetDeviceByIP(ip)
 	if err != nil {
 		log.Println(err)

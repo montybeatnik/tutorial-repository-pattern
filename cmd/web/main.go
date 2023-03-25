@@ -14,7 +14,7 @@ func main() {
 
 	// =========================================================================
 	// Stand up a debug muxer for observability.
-	deubgMux := devices.DebugStandardLibraryMux()
+	deubgMux := DebugStandardLibraryMux()
 
 	// Fire up a web server in the background, exposing the debug methods.
 	go func() {
@@ -31,7 +31,7 @@ func main() {
 	// wire the repo into the service
 	svc := devices.NewService(repo)
 	// build a server
-	svr := devices.NewServer(svc)
+	svr := NewServer(svc)
 	// fire up the server
 	log.Printf("firing up server on %v", *port)
 	if err := http.ListenAndServe(fmt.Sprintf(":%v", *port), svr.NewMux()); err != nil {
