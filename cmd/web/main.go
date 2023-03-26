@@ -23,8 +23,8 @@ func main() {
 		}
 	}()
 
-	// grab the port from the CLI or use 9080 by defaul
-	port := flag.String("port", "9080", "port on which to listen for incoming requests")
+	// grab the port from the CLI or use 8000 by defaul
+	port := flag.String("port", "8000", "port on which to listen for incoming requests")
 	flag.Parse()
 	// stand up the repo
 	repo := store.NewInMemRepo()

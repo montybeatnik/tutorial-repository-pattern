@@ -68,6 +68,12 @@ func main() {
 ### Web 
 If you're into firing up a full on web server and hitting the API with JSON or to get JSON, use cmd/web/main.go. 
 
+```bash
+# From the project root /devices. 
+go run cmd/web/*.go
+```
+
+
 #### Sample code for the web dir. 
 ```go
 package main
@@ -83,8 +89,8 @@ import (
 )
 
 func main() {
-	// grab the port from the CLI or use 9080 by defaul
-	port := flag.String("port", "9080", "port on which to listen for incoming requests")
+	// grab the port from the CLI or use 8000 by defaul
+	port := flag.String("port", "8000", "port on which to listen for incoming requests")
 	flag.Parse()
 	// stand up the repo
 	repo := store.NewInMemRepo()
@@ -103,11 +109,11 @@ func main() {
 ## Curl examples 
 ```bash
 # create a device
-curl -X POST localhost:9080/new-device \
+curl -X POST localhost:8000/new-device \
     -H 'Content-Type: application/json' \
     -d '{"hostname": "curl_test", "ip": "7.7.7.42", "clli": "someclli"}'
 # get a device by ip
-curl -X GET localhost:9080/device/7.7.7.42
+curl -X GET localhost:8000/device/7.7.7.42
 # if you're into metrics
 curl -X GET localhost:4000/debug/vars
 ```
